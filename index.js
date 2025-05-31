@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 require('dotenv').config()
 
@@ -37,8 +37,16 @@ async function run() {
 
     app.get('/coffees', async(req, res)=>{
         const allCoffeeData = await coffeeCollection.find().toArray();
-        // console.log(allCoffeeData.length)
         res.send(allCoffeeData);
+    })
+
+    app.get('/coffees/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await coffeeCollection.findOne(query);
+
+      res.send(result);
+
     })
 
     app.post('/coffees', async(req, res)=>{
